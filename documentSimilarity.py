@@ -1,6 +1,7 @@
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import numpy as np
+np.seterr(divide='ignore', invalid='ignore')
 import nltk
 
 def process(file):
@@ -22,14 +23,15 @@ def process(file):
     count = nltk.defaultdict(int)
     for word in filtered_tokens:
         count[word] += 1
-        return count
+    return count
 
 #calculating cosine similarity
 def cos_sim(a, b):
     dot_product = np.dot(a, b)
     norm_a = np.linalg.norm(a)
     norm_b = np.linalg.norm(b)
-    return dot_product / (norm_a * norm_b)
+    # print(dot_product, norm_a, norm_b)
+    return float(dot_product) / (norm_a * norm_b)
 
 def getSimilarity(dict1, dict2):
     all_words_list = []
@@ -46,13 +48,13 @@ def getSimilarity(dict1, dict2):
         v1[i] = dict1.get(key, 0)
         v2[i] = dict2.get(key, 0)
         i = i + 1
-        return cos_sim(v1, v2)
+    return cos_sim(v1, v2)
 
 if __name__ == '__main__':
     # python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"
-    dict1 = process("D:/Semester 6/NLP/nlp/document1.txt")
-    dict2 = process("D:/Semester 6/NLP/nlp/document2.txt")
-    dict3 = process("D:/Semester 6/NLP/nlp/document3.txt")
+    dict1 = process("/home/nirmaldalmia/Desktop/nlp/document1.txt")
+    dict2 = process("/home/nirmaldalmia/Desktop/nlp/document2.txt")
+    dict3 = process("/home/nirmaldalmia/Desktop/nlp/document3.txt")
     print("Similarity between document 1 and 2 is ", getSimilarity(dict1, dict2))
     print("Similarity between document 1 and 3 is ", getSimilarity(dict1, dict3))
     print("Similarity between document 2 and 3 is ", getSimilarity(dict2, dict3))
